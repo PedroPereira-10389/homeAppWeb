@@ -3,7 +3,6 @@ import { getSession, useSession } from "next-auth/react";
 
 export async function makeRequest(url: string, method: any, body: any, usingHeaders: boolean) {
     const config = usingHeaders ? await getHeaders(usingHeaders) : {};
-    console.log(config)
     switch (method) {
         case 'GET' || 'GET'.toLowerCase():
             return axios.get(url, config).then(function (response) { return response.data }).catch(err => err);
@@ -26,7 +25,6 @@ export async function getHeaders(usingHeaders: boolean) {
     if (usingHeaders) {
         const session = await getSession();
         const access_token = session?.access_token;
-        console.log(access_token)
         return {
             headers: {
                 Authorization: "Bearer " + access_token

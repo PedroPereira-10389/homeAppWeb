@@ -9,9 +9,7 @@ import { getUsers } from '@/server/api/users/users';
 import { useSession } from 'next-auth/react';
 
 const inter = Inter({ subsets: ['latin'] })
-
 export default function UsersList() {
-    const { data: session, status } = useSession();
     const inputFileRef = useRef<HTMLInputElement>(null);
     const [files, setInputFile] = useState<any | null>(null);
     const [dataOrigin, setUsersOrigin] = useState([]);
@@ -26,17 +24,27 @@ export default function UsersList() {
 
         },
         {
-            name: 'Status',
+            name: 'Enterprise',
+
+        },
+        {
+            name: ' User Status',
+
+        },
+        {
+            name: 'Subscription Status',
 
         },
         {
             name: 'Actions',
 
         },
+
     ];
 
     useEffect(() => {
         getUsers().then((resp) => {
+            console.log(resp)
             if (resp.length > 0) {
                 setUsersFound(resp);
                 setUsersOrigin(resp);
@@ -131,7 +139,6 @@ export default function UsersList() {
                                         </Col>
                                     </Row>
                                 </Container>
-
                         }
 
                         <Form.Control type="file" className="d-none" ref={inputFileRef} onChange={onInputFileChange} />
@@ -153,18 +160,21 @@ export default function UsersList() {
                                     <th scope="row">{row.id}</th>
                                     <td>{row.name}</td>
                                     <td>{row.email}</td>
-                                    <td>{row.is_active ? <Check2Circle color='green'></Check2Circle> : <XCircleFill></XCircleFill>}</td>
+                                    <td>{row.enterprise}</td>
+                                    <td>{row.is_active ? <Check2Circle color='green'></Check2Circle> : <XCircleFill color='red'></XCircleFill>}</td>
+                                    <td>{row.subscription.length > 0 ?
+                                        row.subscription[0].is_active ? <Check2Circle color='green'></Check2Circle> : <XCircleFill color='red'></XCircleFill> : 'N/A'}</td>
                                     <td>
-                                        <Link href={'/products/details/' + row.id}>
+                                        <Link href={'/'}>
                                             <ButtonComponent content={<EyeFill></EyeFill>}
                                                 type={'primary'} action={fakeClick} css={''}></ButtonComponent>
                                         </Link>
-
-                                        <ButtonComponent content={<PencilFill></PencilFill>}
-                                            type={'warning'} action={fakeClick} css={'ml-1'}></ButtonComponent>
-                                        <ButtonComponent content={<Trash2Fill></Trash2Fill>}
-                                            type={'danger'} action={fakeClick} css={'ml-1'}></ButtonComponent>
-
+                                        <Link href={{ pathname: "/users/edit", query: { id: row.uuid } }}>
+                                            <ButtonComponent content={<PencilFill></PencilFill>}
+                                                type={'warning'} action={fakeClick} css={'ml-1'}></ButtonComponent>
+                                            <ButtonComponent content={<Trash2Fill></Trash2Fill>}
+                                                type={'danger'} action={fakeClick} css={'ml-1'}></ButtonComponent>
+                                        </Link>
                                     </td>
                                 </tr>
 
@@ -174,8 +184,6 @@ export default function UsersList() {
                     </tbody>
                 </Table>
             </Container >
-
-
         </>
     )
 }

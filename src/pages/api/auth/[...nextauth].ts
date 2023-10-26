@@ -9,11 +9,10 @@ export default NextAuth({
     secret: process.env.NEXTAUTH_SECRET,
     pages: { signIn: '/' },
     session: {
-        strategy: "jwt",
+        strategy: "jwt"
     },
     jwt: { encode, decode },
     providers: [
-
         CredentialsProvider({
             id: 'credentials',
             name: "Credentials",
@@ -31,6 +30,7 @@ export default NextAuth({
                     const results = await authApi(credentials)
                     if (results['status'] == 200) {
                         const user = results['message']['user'];
+                        
                         return user
                     }
                     throw new Error(results['message']['user'])
@@ -64,6 +64,7 @@ export default NextAuth({
         async session({ session, user, token }) {
             session.access_token = token.access_token;
             session.user.role=token.user.role
+            session.id = token.user.id
             return session
         },
         async jwt({ token, user }) {

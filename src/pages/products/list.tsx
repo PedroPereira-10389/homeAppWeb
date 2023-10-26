@@ -1,6 +1,6 @@
 import { ButtonComponent } from '@/components/button';
 import { Message } from '@/components/toast';
-import { deleteProduct, getProducts, importProducts } from '@/server/api/products';
+import { deleteProduct, getProducts, importProducts } from '@/server/api/products/products';
 import { Inter } from 'next/font/google'
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react'
